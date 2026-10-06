@@ -1,0 +1,284 @@
+/*
+ * Theme CSS — replicate offline version (index.css + theme.css + green.css)
+ * (green theme เป็นค่าเริ่มต้น; รองรับ switcher 5 ธีม)
+ */
+
+:root {
+  --primary-color: #4caf50;
+  --secondary-color: #81c784;
+  --bg-primary: #d1f7d3;
+  --bg-secondary: #a5d6a7;
+  --bg-card: #ffffff;
+  --bg-card-header: linear-gradient(135deg, #166534 0%, #15803d 100%);
+  --bg-input: #f1f8e9;
+  --bg-hover: #f1f8e9;
+  --border-color: #66bb6a;
+  --border-input: #66bb6a;
+  --text-primary: #1b5e20;
+  --text-secondary: #2e7d32;
+  --text-label: #2e7d32;
+  --hover-row: rgba(76, 175, 80, 0.2);
+  --selected-row: rgba(76, 175, 80, 0.3);
+  --font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---- app background ---- */
+.pl-app {
+  background: linear-gradient(135deg, var(--bg-primary) 0%, #e8f5e9 100%);
+  min-height: 100vh;
+  color: var(--text-primary);
+  font-family: var(--font-family);
+}
+
+/* ---- navbar (offline: index.css → var(--bg-card) โปร่งแสง + blur + border) ---- */
+.modern-navbar {
+  background: var(--bg-card);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+.navbar-brand {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* ---- unit buttons (offline: bg-secondary + border; active = solid primary) ---- */
+.unit-btn {
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+.unit-btn:hover:not(.active) {
+  background: var(--bg-hover);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+.unit-btn.active {
+  background: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+  box-shadow: 0 6px 18px rgba(27, 94, 32, 0.14);
+}
+
+/* ---- icon buttons (offline: radius 50% + bg-secondary) ---- */
+.icon-btn {
+  background: var(--bg-secondary);
+  border-radius: 50%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--primary-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+.icon-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--text-primary);
+}
+
+/* ---- theme text ---- */
+.theme-text-primary {
+  color: var(--text-primary);
+}
+.theme-text-secondary {
+  color: var(--text-secondary);
+}
+.theme-border {
+  border-color: var(--border-color);
+}
+.theme-card {
+  background-color: var(--bg-card);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(16, 24, 16, 0.06);
+}
+.theme-input {
+  background-color: var(--bg-input);
+  border-color: var(--border-input);
+  color: var(--text-primary);
+}
+.theme-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+/* ---- header title ---- */
+.header-title {
+  font-size: 2.25rem;
+  line-height: 1.1;
+  letter-spacing: 0.5px;
+  color: var(--text-primary);
+}
+.current-datetime {
+  color: #1e40af;
+}
+.shift-status {
+  color: #0e7490;
+}
+
+/* ---- table ---- */
+.grade-row:hover {
+  background-color: var(--hover-row) !important;
+}
+.grade-row.selected-row {
+  background-color: var(--selected-row) !important;
+}
+.sub-grade {
+  color: #ef4444 !important;
+  font-weight: 600;
+}
+
+/* ---- history rows ---- */
+.history-row:hover {
+  background-color: var(--hover-row);
+}
+
+/* ---- loading spinner ---- */
+.loading-spinner {
+  border-color: var(--primary-color) !important;
+  border-top-color: transparent !important;
+}
+
+/* ---- two column layout (offline: index.css) ---- */
+.two-col-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+@media (min-width: 1024px) {
+  .two-col-layout {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .two-col-layout > .theme-card {
+    width: 100%;
+  }
+}
+
+/* ---- modal ---- */
+.modal-card {
+  background-color: var(--bg-card);
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+}
+/* history modal sizing (offline: index.css) */
+#history-modal .modal-card {
+  max-width: 920px !important;
+  width: calc(100% - 4rem) !important;
+  padding: 1.25rem !important;
+  border-radius: 12px !important;
+  max-height: 75vh !important;
+  overflow: hidden !important;
+}
+#theme-modal .modal-card {
+  max-width: 720px !important;
+  width: calc(100% - 3rem) !important;
+}
+#history-modal .modal-card .overflow-x-auto,
+#history-modal .modal-card .max-h-96 {
+  max-height: calc(75vh - 160px);
+  overflow-y: auto;
+}
+.modal-icon {
+  background: var(--primary-color);
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+/* ---- tabs ---- */
+.tab-border {
+  border-color: var(--border-color);
+}
+.help-tab.active {
+  background: var(--primary-color);
+  color: #ffffff;
+}
+.help-tab:not(.active) {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* ---- content boxes ---- */
+.usage-box {
+  background: var(--bg-secondary);
+}
+.step-number {
+  background: var(--primary-color);
+}
+.spec-card-bg {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+.spec-title {
+  color: var(--primary-color);
+}
+.spec-size-badge {
+  background: #fef3c7;
+}
+.spec-value {
+  color: #059669;
+}
+.spec-marker {
+  color: #dc2626;
+  background: #fee2e2;
+}
+
+/* ---- select arrow ---- */
+.shift-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M7 10l5 5 5-5H7z' fill='%232e7d32'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1.5em;
+  padding-right: 2.5rem;
+}
+
+/* ---- theme switcher gradients (offline: index.css) ---- */
+.theme-gradient-purple {
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+}
+.theme-gradient-blue {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+.theme-gradient-green {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+.theme-gradient-pink {
+  background: linear-gradient(135deg, #ec4899, #db2777);
+}
+.theme-gradient-dark {
+  background: linear-gradient(135deg, #374151, #1f2937);
+}
+
+/* ---- number spinner ---- */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+  height: 100%;
+  cursor: pointer;
+}

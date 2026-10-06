@@ -1,0 +1,470 @@
+/* Report Page Styles — replicate css/report.css + paper.css
+   NOTE: ใช้ .report-body นำหน้า selector เพื่อชนะ Tailwind Preflight
+   (@tailwind base ใน globals.css reset margin/animation ของทุก element) */
+
+@page {
+  size: A4 landscape;
+  margin: 0;
+}
+
+.report-body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.report-body.A4 {
+  background: #e0e0e0;
+}
+
+/* Paper */
+.report-body .sheet {
+  margin: 0;
+  overflow: visible;
+  position: relative;
+  box-sizing: border-box;
+  page-break-after: always;
+  padding: 10mm;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 40px;
+}
+.report-body.A4.landscape .sheet {
+  width: 297mm;
+  height: 209mm;
+}
+
+@media screen {
+  .report-body {
+    background: #e0e0e0;
+  }
+  .report-body .sheet {
+    background: white;
+    box-shadow: 0 0.5mm 2mm rgba(0, 0, 0, 0.3);
+    /* margin-left/right auto + margin-bottom 40px (สำคัญ: คง 40px ไว้) */
+    margin: 5mm auto 40px;
+    background-image: url(/images/polimaxx.jpg);
+    background-size: cover;
+  }
+}
+
+.report-body .sheet:last-child {
+  margin-bottom: 0;
+}
+
+/* Dashed separator */
+.report-body .sheet:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  height: 3px;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(231, 76, 60, 0.8) 0px,
+    rgba(231, 76, 60, 0.8) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  z-index: 1;
+  display: block;
+}
+
+/* Box numbers */
+.report-body .bno {
+  border: 2px solid black;
+  height: 40px;
+  width: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin: 0 5px;
+  vertical-align: middle;
+}
+.report-body .bno-middle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin: 0 5px;
+  vertical-align: middle;
+}
+
+/* Header (PL) — จุดอ้างอิงให้ grade (position:absolute) อยู่ในตำแหน่งที่ถูกต้อง */
+.report-body .header {
+  position: absolute;
+  top: 150px;
+  left: 50px;
+  text-align: center;
+  width: 90%;
+}
+
+/* Scissors */
+.report-body .scissors-separator {
+  position: absolute;
+  bottom: -37px;
+  right: 5%;
+  transform: rotate(90deg);
+  font-size: 32px;
+  color: #e74c3c;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+  animation: scissorsPacman 8s linear infinite;
+  pointer-events: none;
+  display: block;
+}
+.report-body .sheet:last-child .scissors-separator {
+  display: none;
+}
+@keyframes scissorsPacman {
+  0% {
+    right: 5%;
+    transform: rotate(90deg);
+  }
+  48% {
+    right: 95%;
+    transform: rotate(90deg);
+  }
+  50% {
+    right: 95%;
+    transform: rotate(270deg);
+  }
+  98% {
+    right: 5%;
+    transform: rotate(270deg);
+  }
+  100% {
+    right: 5%;
+    transform: rotate(90deg);
+  }
+}
+
+/* Control panel */
+.report-control-panel {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+.report-btn {
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.report-btn-primary {
+  background: #4caf50;
+  color: white;
+}
+.report-btn-primary:hover {
+  background: #388e3c;
+}
+
+/* SASB layout */
+.report-body .abs_number {
+  border: none;
+  height: 40px;
+  width: 30px;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  font-size: 40px;
+}
+.report-body .boxR {
+  margin-left: -35px;
+  width: 530px;
+  height: 600px;
+  position: relative;
+}
+.report-body .text-center-flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+.report-body .box-logo-tis {
+  line-height: 0.1cm;
+  width: 200px;
+  height: 120px;
+  text-align: center;
+  box-sizing: border-box;
+  font-size: 12px;
+  font-weight: 900;
+}
+.report-body .sasb-title {
+  font-family: Arial, sans-serif;
+  color: black;
+  white-space: nowrap;
+  margin: 0;
+}
+
+/* Print */
+@media print {
+  .report-body.A4.landscape {
+    width: 297mm;
+  }
+  .report-body .sheet {
+    background-image: none !important;
+    box-shadow: none !important;
+    margin: 0 auto !important;
+  }
+  .no-print,
+  .report-body .scissors-separator,
+  .report-body .sheet:not(:last-child)::after {
+    display: none !important;
+  }
+}
+
+/* ============================================================
+   Help Button + Help Modal (replicate offline report.css)
+   ปุ่ม 📘 ลอย — ย้ายมาอยู่ใต้ control panel (Print/Close)
+   ============================================================ */
+
+/* Control panel: เรียงปุ่มเป็น column เพื่อให้ help-btn ต่อท้ายข้างล่าง */
+.report-control-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Help Button — ลอยใต้ปุ่ม Print/Close (เดิม offline: top:30px; right:340px) */
+.report-body .report-help-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  margin: 8px auto 0;
+}
+.report-body .report-help-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+}
+
+/* Modal */
+.report-body .report-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.report-body .report-modal.hidden {
+  display: none;
+}
+.report-body .report-modal-content {
+  background: white;
+  padding: 32px;
+  border-radius: 24px;
+  max-width: 900px;
+  margin: 0 16px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+.report-body .report-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e5e7eb;
+}
+.report-body .report-modal-close {
+  color: #9ca3af;
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.report-body .report-modal-close:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+/* Tabs */
+.report-body .report-tab-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 8px;
+}
+.report-body .report-tab-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+.report-body .report-tab-btn.active {
+  background: #7c3aed;
+  color: white;
+}
+.report-body .report-tab-btn:not(.active) {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+/* Spec Cards */
+.report-body .report-spec-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.report-body .report-spec-card {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+}
+.report-body .report-spec-card h4 {
+  font-weight: 600;
+  color: #7c3aed;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.report-body .report-spec-size-badge {
+  background: #fef3c7;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-weight: bold;
+}
+.report-body .report-spec-value {
+  color: #059669;
+  font-weight: bold;
+}
+.report-body .report-spec-marker {
+  color: #dc2626;
+  background: #fee2e2;
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+/* Modal header icon + titles */
+.report-body .report-modal-icon-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.report-body .report-modal-icon {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+.report-body .report-modal-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #7c3aed;
+  margin: 0;
+}
+.report-body .report-modal-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 4px 0 0 0;
+}
+
+/* Usage box */
+.report-body .report-usage-container {
+  background: #f9fafb;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.report-body .report-usage-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #7c3aed;
+  margin: 0 0 16px 0;
+}
+.report-body .report-usage-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.report-body .report-usage-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.report-body .report-usage-number {
+  width: 24px;
+  height: 24px;
+  background: #7c3aed;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+.report-body .report-usage-text strong {
+  color: #7c3aed;
+}
+.report-body .report-shortcuts-box {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  border-radius: 12px;
+  padding: 16px;
+  color: white;
+}
+.report-body .report-template-grid {
+  display: grid;
+  gap: 12px;
+}
+.report-body .report-template-description {
+  color: #6b7280;
+  font-size: 14px;
+  margin: 0;
+}
+
+@media print {
+  .report-body .report-help-btn,
+  .report-body .report-modal {
+    display: none !important;
+  }
+}
+
