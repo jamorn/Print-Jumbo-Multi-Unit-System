@@ -75,9 +75,18 @@ const THEME_VARS: Record<ThemeName, Record<string, string>> = {
   },
 };
 
+// รวมชื่อ CSS variable ทั้งหมดที่ธีมใดๆ อาจตั้งไว้ — ใช้ล้าง inline style ก่อนสลับธีม
+// ป้องกันค่าค้างจากธีมก่อนหน้า (เช่น --bg-card ของ dark) ที่ธีมใหม่ไม่ได้ตั้งทับ
+const ALL_THEME_KEYS = Array.from(
+  new Set(Object.values(THEME_VARS).flatMap((vars) => Object.keys(vars)))
+);
+
 export function applyTheme(theme: ThemeName): void {
   if (typeof document === "undefined") return;
   const root = document.documentElement;
   const vars = THEME_VARS[theme] || THEME_VARS.green;
+  // 1) ล้าง inline style ของทุก key ก่อน → ค่าที่ไม่ถูกตั้งทับจะกลับไปใช้ค่า in :root ตามเดิม
+  ALL_THEME_KEYS.forEach((k) => root.style.removeProperty(k));
+  // 2) set ค่าของธีมที่เลือก
   Object.entries(vars).forEach(([k, v]) => root.style.setProperty(k, v));
 }
