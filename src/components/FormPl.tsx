@@ -28,12 +28,13 @@ export function FormPl() {
   }>({});
   const [historyOpen, setHistoryOpen] = useState(false);
 
-  // auto-set shift on first load
+  // auto-set shift on first load (ครั้งแรกที่เปิดเว็บเท่านั้น)
   useEffect(() => {
-    if (!form.shiftManuallySet) {
-      setForm({ shift: shiftTable() });
+    if (!useAppStore.getState().form.shiftManuallySet) {
+      useAppStore.getState().setForm({ shift: shiftTable() });
     }
-  }, [form.shiftManuallySet, setForm]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const isSub = /\bSUB\b/i.test(form.grade);
   const templates = meta.availableTemplates || [
@@ -234,15 +235,18 @@ export function FormPl() {
               </select>
             </Field>
             <Field label="วันที่">
-              <input
+              <select
                 id="idate"
-                type="number"
-                min={1}
-                max={31}
                 value={form.idate}
                 onChange={(e) => setForm({ idate: e.target.value })}
                 className="theme-input w-full rounded-lg border p-2.5 shadow-sm"
-              />
+              >
+                {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => (
+                  <option key={d} value={String(d)}>
+                    {d}
+                  </option>
+                ))}
+              </select>
             </Field>
           </div>
 

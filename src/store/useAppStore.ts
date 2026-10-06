@@ -102,10 +102,16 @@ export const useAppStore = create<AppState>((set) => ({
   setTheme: (t) => set({ theme: t }),
 
   resetForUnitChange: (u) =>
-    set({
+    set((s) => ({
       unit: u,
       selectedGrade: null,
       reportData: null,
-      form: makeEmptyForm(),
-    }),
+      form: {
+        ...makeEmptyForm(),
+        // คง กะ/วันที่/flag ไว้ — user ตั้งใจเลือกแล้ว ไม่ควรหายตอนสลับ unit
+        shift: s.form.shift,
+        idate: s.form.idate,
+        shiftManuallySet: s.form.shiftManuallySet,
+      },
+    })),
 }));

@@ -258,7 +258,7 @@ function generateTopLeftQR(data: ReportData, runningNumber: string): string {
       new QR(el, { text: qrUrl, width: size, height: size });
     }
   }, 100);
-  return `<div id="${qrId}" style="position: absolute; top: 26px; left: 22px; width: ${size}px; height: ${size}px;"></div>`;
+  return `<div id="${qrId}" style="position: absolute; top: 26px; left: 26px; width: ${size}px; height: ${size}px;"></div>`;
 }
 
 export function generatePlTagPage(
