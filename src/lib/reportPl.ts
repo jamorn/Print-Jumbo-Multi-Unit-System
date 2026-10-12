@@ -199,7 +199,8 @@ function generateFTHTML(
   fontSize: number,
   display: string,
 ): string {
-  return `<div style="position: absolute; top: ${topOffset}px; right: ${rightOffset}px; display: ${display};"><p style="font-size: ${fontSize}px">(F/T)</p></div>`;
+  // center ในโซนซีกซ้าย (width 550px) ให้ตรงกับ title1/title2
+  return `<div style="position: absolute; top: ${topOffset}px; left: 0; width: 550px; text-align: center; display: ${display};"><p style="font-size: ${fontSize}px; margin: 0;">(F/T)</p></div>`;
 }
 
 function generateLTHTML(
@@ -208,7 +209,8 @@ function generateLTHTML(
   fontSize: number,
   display: string,
 ): string {
-  return `<div style="position: absolute; top: ${topOffset}px; right: ${rightOffset}px; display: ${display};"><p style="font-size: ${fontSize}px">(L/T)</p></div>`;
+  // center ในโซนซีกซ้าย (width 550px) ให้ตรงกับ title1/title2
+  return `<div style="position: absolute; top: ${topOffset}px; left: 0; width: 550px; text-align: center; display: ${display};"><p style="font-size: ${fontSize}px; margin: 0;">(L/T)</p></div>`;
 }
 
 function getPlantCode(unit: string, lot: string): string {
@@ -314,8 +316,8 @@ export function generatePlTagPage(
     ${showTIS ? generateTISLogo(positions.tisLeft, 430, 120, data.unit) : ""}
     ${showQR ? generateQRCode(positions.qrLeft, 430, 110, data.qrCodeUrl) : ""}
     ${showSIRIM ? generateSIRIMLogo(positions.sirimLeft, 430, 140, data.sirim_title1, data.sirim_title2, data.sirim_title3) : ""}
-    ${generateFTHTML(820, 315, 50, ftDisplay)}
-    ${generateLTHTML(820, 495, 50, ltDisplay)}
+    ${generateFTHTML(820, 355, 50, ftDisplay)}
+    ${generateLTHTML(820, 555, 50, ltDisplay)}
     <div class="scissors-separator">✂️</div>
    </section>`;
 }

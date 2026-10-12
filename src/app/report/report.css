@@ -105,7 +105,7 @@
 /* Scissors */
 .report-body .scissors-separator {
   position: absolute;
-  bottom: -37px;
+  bottom: -42px;
   right: 5%;
   transform: rotate(90deg);
   font-size: 32px;

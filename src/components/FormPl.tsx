@@ -43,6 +43,39 @@ export function FormPl() {
     "template3",
   ];
 
+  // หน้าเดียว (from === to) -> มี 1 tag: F/T และ L/T เลือกได้ทีละอัน (mutually exclusive)
+  const isSinglePage =
+    form.fromPage !== "" &&
+    form.toPage !== "" &&
+    !isNaN(parseInt(form.fromPage, 10)) &&
+    !isNaN(parseInt(form.toPage, 10)) &&
+    parseInt(form.fromPage, 10) === parseInt(form.toPage, 10);
+
+  // เมื่อสลับเป็นหน้าเดียว + ติ๊กไว้ทั้งคู่ -> ปิด L/T (เหลือ F/T)
+  useEffect(() => {
+    if (isSinglePage && form.ft && form.lt) {
+      setForm({ lt: false });
+    }
+  }, [isSinglePage, form.ft, form.lt, setForm]);
+
+  /** toggle F/T: ถ้าหน้าเดียว -> ปิด L/T */
+  function handleToggleFT(v: boolean) {
+    if (isSinglePage && v) {
+      setForm({ ft: true, lt: false });
+    } else {
+      setForm({ ft: v });
+    }
+  }
+
+  /** toggle L/T: ถ้าหน้าเดียว -> ปิด F/T */
+  function handleToggleLT(v: boolean) {
+    if (isSinglePage && v) {
+      setForm({ lt: true, ft: false });
+    } else {
+      setForm({ lt: v });
+    }
+  }
+
   function validatePages(from: string, to: string) {
     const f = parseInt(from, 10);
     const t = parseInt(to, 10);
@@ -344,13 +377,13 @@ export function FormPl() {
               id="ft-checkbox"
               label="F/T (First Tag)"
               checked={form.ft}
-              onChange={(v) => setForm({ ft: v })}
+              onChange={handleToggleFT}
             />
             <Check
               id="lt-checkbox"
               label="L/T (Last Tag)"
               checked={form.lt}
-              onChange={(v) => setForm({ lt: v })}
+              onChange={handleToggleLT}
             />
             <Check
               id="qr-checkbox"
