@@ -83,6 +83,8 @@ export interface UnitMeta {
   defaultTemplate?: string;
   /** สีของตาราง/ไอคอน unit */
   badgeColor?: string;
+  /** QR URL (PL) — ลิงก์ cert TISI ต่อ unit */
+  qrCodeUrl?: string;
 }
 
 /** ข้อมูลที่ส่งจากฟอร์มไปหน้า report */

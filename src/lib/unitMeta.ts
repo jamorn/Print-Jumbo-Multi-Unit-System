@@ -32,6 +32,7 @@ export const UNIT_META: Record<UnitId, UnitMeta> = {
     },
     availableTemplates: ["template1", "template2", "template3"],
     defaultTemplate: "template3",
+    qrCodeUrl: "https://appdb.tisi.go.th/Q/i.php?d=1351525040",
     validation: {
       lotLength: 10,
       lotPattern: "^\\d{10}$",
@@ -63,6 +64,7 @@ export const UNIT_META: Record<UnitId, UnitMeta> = {
     },
     availableTemplates: ["template1", "template2"],
     defaultTemplate: "template2",
+    qrCodeUrl: "https://appdb.tisi.go.th/Q/i.php?d=3828891212",
     validation: {
       lotLength: 10,
       lotPattern: "^\\d{10}$",
@@ -94,6 +96,7 @@ export const UNIT_META: Record<UnitId, UnitMeta> = {
     },
     availableTemplates: ["template1", "template2"],
     defaultTemplate: "template1",
+    qrCodeUrl: "https://appdb.tisi.go.th/Q/i.php?d=3828891212",
     validation: {
       lotLength: 8, // PPC: lot 8 หลัก
       lotPattern: "^\\d{8}$",

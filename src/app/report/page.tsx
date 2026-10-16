@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Script from "next/script";
 import type { ReportData } from "@/type";
 import { generatePlTagPage } from "@/lib/reportPl";
+import { UNIT_META } from "@/lib/unitMeta";
 import { ReportHelpModal } from "@/components/ReportHelpModal";
 import "./report.css";
 
@@ -23,7 +24,7 @@ const FALLBACK: ReportData = {
   sirim_title1: "Certified to MS1058 : PART 1 : 2005",
   sirim_title2: "Certified No. : PC004152",
   sirim_title3: "Designation : PE100",
-  qrCodeUrl: "https://appdb.tisi.go.th/Q/i.php?d=1351525040",
+  qrCodeUrl: UNIT_META.HDPE.qrCodeUrl,
 };
 
 export default function ReportPage() {
@@ -117,4 +118,3 @@ export default function ReportPage() {
     </div>
   );
 }
-

@@ -172,7 +172,7 @@ function generateQRCode(
     ).QRCode;
     if (el && typeof QR !== "undefined") {
       new QR(el, {
-        text: qrUrl || "https://appdb.tisi.go.th/Q/i.php?d=1351525040",
+        text: qrUrl || "",
         width: size,
         height: size,
       });

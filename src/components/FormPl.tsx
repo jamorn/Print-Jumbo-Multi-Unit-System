@@ -156,6 +156,7 @@ export function FormPl() {
       plantCode: meta.gasKey.replace(/\D/g, ""),
       title1: meta.defaults?.title1 || "",
       title2: meta.defaults?.title2 || "",
+      qrCodeUrl: meta.qrCodeUrl || "",
     };
 
     saveGradeHistory(unit, form.grade, {
