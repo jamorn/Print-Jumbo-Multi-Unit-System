@@ -1,4 +1,5 @@
-import type { ReportData } from "@/type";
+import type { ReportData, UnitId } from "@/type";
+import { UNIT_META } from "@/lib/unitMeta";
 
 /**
  * reportPl — replicate inline script ใน report.html (PL)
@@ -155,6 +156,32 @@ function generateTISLogo(
   return `<div style="position: absolute; left: ${leftOffset}px; top: ${topOffset}px; width: ${width}px; display: block;"><img src="/images/mfg.png" alt="TIS Logo" style="width: 100%; height: auto;"><p style="font-size: 10px; text-align: center; margin-top: 3px; font-weight: bold; white-space: nowrap;">${tisText}</p></div>`;
 }
 
+/** cache QR กลาง (per url+size) — สร้างครั้งแรกครั้งเดียวแล้ว reuse ทุกหน้า */
+const qrDataUrlCache = new Map<string, string>();
+
+/** สร้าง QR เป็น PNG data URL (เรนเดอร์ด้วย qrcode.min.js -> canvas -> toDataURL) */
+function makeQRDataUrl(text: string, size: number): string {
+  if (!text) return "";
+  const key = `${text}|${size}`;
+  const cached = qrDataUrlCache.get(key);
+  if (cached) return cached;
+
+  const QR = (
+    window as unknown as {
+      QRCode?: new (el: HTMLElement, opts: object) => void;
+    }
+  ).QRCode;
+  // lib ยังไม่โหลด -> ไม่ cache ค่า "" (ครั้งถัดไปค่อยสร้างใหม่)
+  if (typeof QR === "undefined") return "";
+
+  const tmp = document.createElement("div");
+  new QR(tmp, { text, width: size, height: size });
+  const canvas = tmp.querySelector("canvas");
+  const dataUrl = canvas ? canvas.toDataURL("image/png") : "";
+  if (dataUrl) qrDataUrlCache.set(key, dataUrl);
+  return dataUrl;
+}
+
 function generateQRCode(
   leftOffset: number,
   topOffset: number,
@@ -162,23 +189,12 @@ function generateQRCode(
   qrUrl?: string,
 ): string {
   if (!leftOffset) return "";
-  const qrId = `qr-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
-  setTimeout(() => {
-    const el = document.getElementById(qrId);
-    const QR = (
-      window as unknown as {
-        QRCode?: new (el: HTMLElement, opts: object) => void;
-      }
-    ).QRCode;
-    if (el && typeof QR !== "undefined") {
-      new QR(el, {
-        text: qrUrl || "",
-        width: size,
-        height: size,
-      });
-    }
-  }, 100);
-  return `<div id="${qrId}" style="position: absolute; left: ${leftOffset}px; top: ${topOffset}px; width: ${size}px; height: ${size}px;"></div>`;
+  const dataUrl = makeQRDataUrl(qrUrl || "", size);
+  return `<div style="position: absolute; left: ${leftOffset}px; top: ${topOffset}px; width: ${size}px; height: ${size}px;">${
+    dataUrl
+      ? `<img src="${dataUrl}" width="${size}" height="${size}" alt="QR" />`
+      : ""
+  }</div>`;
 }
 
 function generateSIRIMLogo(
@@ -304,6 +320,10 @@ export function generatePlTagPage(
   };
   const [defTitle1, defTitle2] = defaultTitles[data.unit] || ["", ""];
 
+  // ดึง qrCodeUrl สดจาก UNIT_META (กันค่าเก่าที่ค้างใน sessionStorage)
+  const freshQrUrl =
+    UNIT_META[data.unit as UnitId]?.qrCodeUrl || data.qrCodeUrl || "";
+
   return `
    <section class="sheet">
     ${showTopLeftQR ? generateTopLeftQR(data, runningNumber) : ""}
@@ -314,7 +334,7 @@ export function generatePlTagPage(
     ${generateTextHTML(data.title1 || defTitle1, 0, 240, 60, "block", "center", "550px")}
     ${generateTextHTML(data.title2 || defTitle2, 0, 320, 30, "block", "center", "550px")}
     ${showTIS ? generateTISLogo(positions.tisLeft, 430, 120, data.unit) : ""}
-    ${showQR ? generateQRCode(positions.qrLeft, 430, 110, data.qrCodeUrl) : ""}
+    ${showQR ? generateQRCode(positions.qrLeft, 430, 110, freshQrUrl) : ""}
     ${showSIRIM ? generateSIRIMLogo(positions.sirimLeft, 430, 140, data.sirim_title1, data.sirim_title2, data.sirim_title3) : ""}
     ${generateFTHTML(820, 355, 50, ftDisplay)}
     ${generateLTHTML(820, 555, 50, ltDisplay)}
