@@ -159,25 +159,35 @@ function generateTISLogo(
 /** cache QR กลาง (per url+size) — สร้างครั้งแรกครั้งเดียวแล้ว reuse ทุกหน้า */
 const qrDataUrlCache = new Map<string, string>();
 
-/** สร้าง QR เป็น PNG data URL (เรนเดอร์ด้วย qrcode.min.js -> canvas -> toDataURL) */
-function makeQRDataUrl(text: string, size: number): string {
+/**
+ * สร้าง QR เป็น PNG data URL (sync) ด้วย qrcode.min.js -> canvas -> toDataURL
+ * หมายเหตุ: qrcode.min.js เป็น sync (วาดลง canvas ทันที) จึงไม่มี setTimeout
+ * คืนค่า "" ถ้า lib ยังไม่โหลด
+ */
+export function makeQRDataUrlSync(text: string, size: number): string {
   if (!text) return "";
-  const key = `${text}|${size}`;
-  const cached = qrDataUrlCache.get(key);
-  if (cached) return cached;
-
   const QR = (
     window as unknown as {
       QRCode?: new (el: HTMLElement, opts: object) => void;
     }
   ).QRCode;
-  // lib ยังไม่โหลด -> ไม่ cache ค่า "" (ครั้งถัดไปค่อยสร้างใหม่)
   if (typeof QR === "undefined") return "";
 
   const tmp = document.createElement("div");
   new QR(tmp, { text, width: size, height: size });
   const canvas = tmp.querySelector("canvas");
-  const dataUrl = canvas ? canvas.toDataURL("image/png") : "";
+  return canvas ? canvas.toDataURL("image/png") : "";
+}
+
+/** QR กลาง (คงที่ต่อ unit) — cache ไว้ สร้างครั้งเดียวต่อ url+size */
+function makeQRDataUrlCached(text: string, size: number): string {
+  if (!text) return "";
+  const key = `${text}|${size}`;
+  const cached = qrDataUrlCache.get(key);
+  if (cached) return cached;
+
+  const dataUrl = makeQRDataUrlSync(text, size);
+  // lib ยังไม่โหลด -> ไม่ cache ค่า "" (ครั้งถัดไปค่อยสร้างใหม่)
   if (dataUrl) qrDataUrlCache.set(key, dataUrl);
   return dataUrl;
 }
@@ -189,7 +199,7 @@ function generateQRCode(
   qrUrl?: string,
 ): string {
   if (!leftOffset) return "";
-  const dataUrl = makeQRDataUrl(qrUrl || "", size);
+  const dataUrl = makeQRDataUrlCached(qrUrl || "", size);
   return `<div style="position: absolute; left: ${leftOffset}px; top: ${topOffset}px; width: ${size}px; height: ${size}px;">${
     dataUrl
       ? `<img src="${dataUrl}" width="${size}" height="${size}" alt="QR" />`
@@ -262,21 +272,16 @@ function buildTopRightQRData(data: ReportData, runningNumber: string): string {
 }
 
 function generateTopLeftQR(data: ReportData, runningNumber: string): string {
+  // dynamic: running number ต่างกันทุกหน้า -> สร้างใหม่ทุกหน้า (ไม่ cache)
   const qrUrl = buildTopRightQRData(data, runningNumber);
   const size = 110;
-  const qrId = `qr-tl-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
-  setTimeout(() => {
-    const el = document.getElementById(qrId);
-    const QR = (
-      window as unknown as {
-        QRCode?: new (el: HTMLElement, opts: object) => void;
-      }
-    ).QRCode;
-    if (el && typeof QR !== "undefined") {
-      new QR(el, { text: qrUrl, width: size, height: size });
-    }
-  }, 100);
-  return `<div id="${qrId}" style="position: absolute; top: 26px; left: 26px; width: ${size}px; height: ${size}px;"></div>`;
+  // sync: สร้าง PNG data URL ทันที (ไม่ใช้ setTimeout) -> ฝัง <img> เลย
+  const dataUrl = makeQRDataUrlSync(qrUrl, size);
+  return `<div style="position: absolute; top: 26px; left: 26px; width: ${size}px; height: ${size}px;">${
+    dataUrl
+      ? `<img src="${dataUrl}" width="${size}" height="${size}" alt="QR-top-left" />`
+      : ""
+  }</div>`;
 }
 
 export function generatePlTagPage(

@@ -468,3 +468,45 @@
   }
 }
 
+/* ============================================================
+   Generating Modal — โผล่ตอนสร้างหน้า, หายเมื่อ ready
+   ============================================================ */
+.report-body .report-generating-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.report-body .report-generating-modal {
+  background: white;
+  padding: 32px 48px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+}
+.report-body .report-generating-spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #e5e7eb;
+  border-top-color: #7c3aed;
+  border-radius: 50%;
+  animation: reportSpin 0.8s linear infinite;
+}
+.report-body .report-generating-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+}
+@keyframes reportSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+

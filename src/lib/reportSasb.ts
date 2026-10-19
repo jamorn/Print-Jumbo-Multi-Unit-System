@@ -1,5 +1,5 @@
 import type { ReportData } from "@/type";
-import { computeMaxFontByWidth } from "./reportPl";
+import { computeMaxFontByWidth, makeQRDataUrlSync } from "./reportPl";
 import { resolveSasbPlantCode } from "./plantLogic";
 
 /** SASB units สำหรับ fallback scan */
@@ -122,21 +122,16 @@ function buildTopRightQRData(data: ReportData, runningNumber: string): string {
 }
 
 function generateTopLeftQR(data: ReportData, runningNumber: string): string {
+  // dynamic: running number ต่างกันทุกหน้า -> สร้างใหม่ทุกหน้า (ไม่ cache)
   const qrUrl = buildTopRightQRData(data, runningNumber);
   const size = 110;
-  const qrId = `qr-tl-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
-  setTimeout(() => {
-    const el = document.getElementById(qrId);
-    const QR = (
-      window as unknown as {
-        QRCode?: new (el: HTMLElement, opts: object) => void;
-      }
-    ).QRCode;
-    if (el && typeof QR !== "undefined") {
-      new QR(el, { text: qrUrl, width: size, height: size });
-    }
-  }, 100);
-  return `<div id="${qrId}" style="position: absolute; top: 26px; left: 26px; width: ${size}px; height: ${size}px;"></div>`;
+  // sync: สร้าง PNG data URL ทันที (ไม่ใช้ setTimeout) -> ฝัง <img> เลย
+  const dataUrl = makeQRDataUrlSync(qrUrl, size);
+  return `<div style="position: absolute; top: 26px; left: 26px; width: ${size}px; height: ${size}px;">${
+    dataUrl
+      ? `<img src="${dataUrl}" width="${size}" height="${size}" alt="QR-top-left" />`
+      : ""
+  }</div>`;
 }
 
 export function generateSasbTagPage(

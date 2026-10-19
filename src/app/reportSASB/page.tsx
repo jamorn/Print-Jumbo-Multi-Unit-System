@@ -30,6 +30,7 @@ const FALLBACK: ReportData = {
 export default function ReportSasbPage() {
   const [data, setData] = useState<ReportData | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [generating, setGenerating] = useState(true);
   const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -55,6 +56,8 @@ export default function ReportSasbPage() {
         out += generateSasbTagPage(page, data);
       }
       main.innerHTML = out;
+      // สร้างเสร็จ -> ปิด modal (หน้า page พร้อมพิมพ์)
+      setGenerating(false);
     };
     tryRender();
   }, [data]);
@@ -101,6 +104,16 @@ export default function ReportSasbPage() {
         data={data}
         variant="sasb"
       />
+
+      {/* Generating modal — โผล่ตอนสร้างหน้า, หายเมื่อพร้อมพิมพ์ */}
+      {generating && (
+        <div className="report-generating-overlay no-print">
+          <div className="report-generating-modal">
+            <div className="report-generating-spinner" />
+            <div className="report-generating-text">⏳ กำลังสร้างหน้า...</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
