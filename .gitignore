@@ -17,6 +17,11 @@
 # misc
 .DS_Store
 *.pem
+# Docs
+/docs
+
+# scripts
+/scripts
 
 # debug
 npm-debug.log*

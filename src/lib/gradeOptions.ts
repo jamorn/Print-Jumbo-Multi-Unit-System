@@ -57,14 +57,21 @@ export function generatePlGradeOptions(gradeItems: GradeItem[]): GradeOption[] {
  *  - displayText SUB = "<GRADE>SUB/<netweight>" (ไม่เว้นวรรค)
  *  - เพิ่ม specialGrade, isSpecial, plantCode, plantName
  */
-export function generateSasbGradeOptions(gradeItems: GradeItem[]): GradeOption[] {
+export function generateSasbGradeOptions(
+  gradeItems: GradeItem[],
+): GradeOption[] {
   const options: GradeOption[] = [];
 
   gradeItems.forEach((g) => {
     if (g.status === false) return;
 
-    const specialGrade = String(g.specialGrade || "N").trim().toUpperCase() === "Y" ? "Y" : "N";
-    const isSpecial = specialGrade === "Y";
+    // รองรับ "N" | "Y" | "YY" — ส่งต่อค่าจริง (Y/YY = special, แสดง NSF; YY = NSF + DWV)
+    const rawSg = String(g.specialGrade || "N")
+      .trim()
+      .toUpperCase();
+    const specialGrade: "N" | "Y" | "YY" =
+      rawSg === "YY" ? "YY" : rawSg === "Y" ? "Y" : "N";
+    const isSpecial = specialGrade === "Y" || specialGrade === "YY";
 
     g.netweightArray.forEach((netweight) => {
       const separator = netweight >= SEABULK_THRESHOLD ? "/SB/" : "/";

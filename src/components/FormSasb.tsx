@@ -95,13 +95,16 @@ export function FormSasb() {
       alert("กรุณาตรวจสอบ จากหน้า/ถึงหน้า");
       return;
     }
-    const titlesSet = meta.titles || { N: [], Y: [] };
-    const titles = titlesSet[(form.specialGrade as "N" | "Y") || "N"] || [];
-
     // SASB: ตัด package size (/750) ออก — ส่งแค่ grade ล้วน
     //   "GA800/750"    -> "GA800"
     //   "GA850SUB/850" -> "GA850SUB"
     const gradeForReport = form.grade.split("/")[0];
+
+    const titlesSet = meta.titles || { N: [], Y: [] };
+    // ⭐ titles: HI* → Y (case พิเศษ), อื่น ๆ ทั้งหมด → N
+    //    (specialGrade ไม่เกี่ยวกับ titles — ใช้เฉพาะ NSF/DWV เท่านั้น)
+    const titlesKey: "N" | "Y" = /^HI/i.test(gradeForReport.trim()) ? "Y" : "N";
+    const titles = titlesSet[titlesKey] || [];
 
     const reportData: ReportData = {
       unit,

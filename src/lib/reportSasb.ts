@@ -66,13 +66,32 @@ function generateLeftSide(data: ReportData): string {
   return html;
 }
 
+/**
+ * resolveSasbSpecialGrade — แยก specialGrade ออกเป็น flag
+ *   "Y"  → NSF logo เท่านั้น
+ *   "YY" → NSF logo + ข้อความ "DWV"
+ *   อื่นๆ → ไม่มีทั้งคู่
+ */
+function resolveSasbSpecialGrade(raw: string | undefined): {
+  showNSF: boolean;
+  showDWV: boolean;
+} {
+  const sg = String(raw || "")
+    .trim()
+    .toUpperCase();
+  return {
+    showNSF: sg === "Y" || sg === "YY",
+    showDWV: sg === "YY",
+  };
+}
+
 function generateRightSide(data: ReportData, runningNumber: string): string {
   const material = buildMaterial(data);
   const lot = String(data.lot || "");
   const netweight = String(data.netweight || "").replace(/,/g, "");
   const running = String(runningNumber);
 
-  const showNSF = String(data.specialGrade || "").toUpperCase() === "Y";
+  const { showNSF, showDWV } = resolveSasbSpecialGrade(data.specialGrade);
   const nsfImg = data.nsfImage || "/images/nsf_logo.svg";
 
   const boxWidth = 529;
@@ -103,7 +122,11 @@ function generateRightSide(data: ReportData, runningNumber: string): string {
     <div class="abs_number" style="margin-top: 60px; margin-left: 320px;">${running}</div>
     ${
       showNSF
-        ? `<div class="box-logo-tis" style="position: absolute; top: 340px; left: 370px;"><img src="${nsfImg}" alt="NSF" style="width: 30%; z-index: 3;" /></div>`
+        ? `<div class="box-logo-tis" style="position: absolute; top: 340px; left: 370px;"><img src="${nsfImg}" alt="NSF" style="width: 30%; z-index: 3; display: inline-block; vertical-align: middle;" />${
+            showDWV
+              ? `<span style="font-size: 15px; font-weight: bold; display: inline-block; vertical-align: middle; margin-left: 6px;">dwv</span>`
+              : ""
+          }</div>`
         : ""
     }
   </div>`;

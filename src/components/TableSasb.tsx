@@ -97,7 +97,8 @@ export function TableSasb() {
           </thead>
           <tbody>
             {filtered.map((o, i) => {
-              const isSpecial = o.specialGrade === "Y";
+              const isSpecial =
+                o.specialGrade === "Y" || o.specialGrade === "YY";
               return (
                 <tr
                   key={`${o.grade}-${o.netweight}-${o.isSub}-${i}`}
@@ -149,7 +150,10 @@ export function TableSasb() {
             })}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={2} className="theme-text-secondary px-6 py-8 text-center">
+                <td
+                  colSpan={2}
+                  className="theme-text-secondary px-6 py-8 text-center"
+                >
                   ไม่พบข้อมูล
                 </td>
               </tr>
