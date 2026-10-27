@@ -117,13 +117,25 @@ export function TableSasb() {
                     <span className="inline-flex items-center align-middle">
                       {o.displayText}
                       {isSpecial && (
-                        <span className="ml-2 inline-flex items-center justify-center rounded-md bg-white px-1 py-0.5 align-middle leading-none">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src="/images/nsf_logo.svg"
-                            alt="NSF"
-                            style={{ height: 20, width: "auto" }}
-                          />
+                        <span className="ml-2 inline-flex items-center gap-1 align-middle">
+                          <span className="inline-flex items-center justify-center rounded-md border border-gray-400 bg-white px-1 py-0.5 leading-none shadow-sm">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src="/images/nsf_logo.svg"
+                              alt="NSF"
+                              style={{ height: 20, width: "auto" }}
+                            />
+                          </span>
+                          {o.specialGrade === "YY" && (
+                            <>
+                              <span className="theme-text-primary text-xs font-bold">
+                                +
+                              </span>
+                              <span className="inline-flex items-center justify-center rounded-md border border-gray-400 bg-white px-1.5 py-0.5 text-[10px] font-bold leading-none text-black shadow-sm">
+                                dwv
+                              </span>
+                            </>
+                          )}
                         </span>
                       )}
                     </span>
