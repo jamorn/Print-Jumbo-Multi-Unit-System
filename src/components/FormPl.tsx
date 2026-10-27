@@ -339,7 +339,7 @@ export function FormPl() {
                   className="cursor-pointer"
                   style={
                     disabled
-                      ? { opacity: 0.45, pointerEvents: "none" }
+                      ? { opacity: 0.4, pointerEvents: "none" }
                       : undefined
                   }
                 >
@@ -353,18 +353,62 @@ export function FormPl() {
                     className="hidden"
                   />
                   <div
-                    className="rounded-lg border-2 p-4 text-center transition-all"
+                    className="relative rounded-xl border-2 p-4 text-center transition-all duration-150"
                     style={{
                       borderColor: selected
                         ? "var(--primary-color)"
                         : "var(--border-color)",
                       backgroundColor: selected
-                        ? "var(--bg-primary)"
-                        : "var(--bg-secondary)",
+                        ? "color-mix(in srgb, var(--primary-color) 30%, var(--bg-card))"
+                        : "var(--bg-card)",
+                      boxShadow: selected
+                        ? "0 0 0 3px rgba(0,0,0,0.12), 0 4px 10px rgba(0,0,0,0.15)"
+                        : "none",
+                      transform: selected ? "scale(1.03)" : "scale(1)",
                     }}
                   >
-                    <div className="mb-2 text-2xl">📄</div>
-                    <div className="theme-text-primary text-sm font-semibold">
+                    <div className="mb-2 flex justify-center">
+                      <span
+                        className="flex h-12 w-12 items-center justify-center rounded-full"
+                        style={{
+                          backgroundColor: selected
+                            ? "var(--primary-color)"
+                            : "var(--bg-secondary)",
+                        }}
+                      >
+                        {selected ? (
+                          <svg
+                            width="26"
+                            height="26"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#ffffff"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        ) : (
+                          <svg
+                            width="26"
+                            height="26"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.8"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="8" y1="13" x2="16" y2="13" />
+                            <line x1="8" y1="17" x2="13" y2="17" />
+                          </svg>
+                        )}
+                      </span>
+                    </div>
+                    <div className="text-sm font-semibold theme-text-primary">
                       {TEMPLATE_NAMES[tpl] || tpl}
                     </div>
                   </div>
